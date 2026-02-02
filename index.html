@@ -44,12 +44,14 @@
     <script type="module">
       import { FormBuilder } from './src/builder/FormBuilder.js';
 
-      // Initialize the form builder
+      // Initialize the form builder with German language
+      // Supported languages: 'de', 'en', 'es', 'fr'
       const builder = new FormBuilder({
         canvasContainerId: 'canvas',
         previewContainerId: 'preview',
         paletteContainerId: 'palette',
         propertiesContainerId: 'properties',
+        language: 'de', // Change to 'de', 'es', or 'fr' for different languages
       });
 
       builder.init();
@@ -66,6 +68,8 @@
       console.log('setSchema(schema) - Set form schema');
       console.log('getFormData() - Get form data');
       console.log('validateForm() - Validate form');
+      console.log('Supported languages: de, en, es, fr');
+      console.log('Switch languages using the dropdown in the toolbar');
     </script>
   </body>
 </html>

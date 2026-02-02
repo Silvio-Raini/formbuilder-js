@@ -12,6 +12,7 @@ import FieldPalette from './FieldPalette.js';
 import Canvas from './Canvas.js';
 import PropertyEditor from './PropertyEditor.js';
 import Constants from '../utils/Constants.js';
+import { i18n } from '../utils/i18n.js';
 
 export class FormBuilder {
   constructor(config = {}) {
@@ -21,8 +22,12 @@ export class FormBuilder {
       paletteContainerId: 'palette',
       canvasContainerId: 'canvas',
       propertiesContainerId: 'properties',
+      language: 'en',
       ...config,
     };
+
+    // Set language
+    i18n.setLanguage(this.config.language);
 
     // Initialize core systems
     this.stateManager = new StateManager();
@@ -143,7 +148,7 @@ export class FormBuilder {
     // Form name input
     const nameInput = document.createElement('input');
     nameInput.type = 'text';
-    nameInput.placeholder = 'Form Name';
+    nameInput.placeholder = i18n.t('formName');
     nameInput.value = this.stateManager.getSchema().meta.name;
     nameInput.className = 'toolbar-input';
     nameInput.addEventListener('change', (e) => {
@@ -154,35 +159,35 @@ export class FormBuilder {
     // Undo button
     const undoBtn = document.createElement('button');
     undoBtn.className = 'toolbar-btn';
-    undoBtn.innerHTML = '↶ Undo';
+    undoBtn.innerHTML = i18n.t('undo');
     undoBtn.addEventListener('click', () => this.undo());
     toolbar.appendChild(undoBtn);
 
     // Redo button
     const redoBtn = document.createElement('button');
     redoBtn.className = 'toolbar-btn';
-    redoBtn.innerHTML = '↷ Redo';
+    redoBtn.innerHTML = i18n.t('redo');
     redoBtn.addEventListener('click', () => this.redo());
     toolbar.appendChild(redoBtn);
 
     // Export button
     const exportBtn = document.createElement('button');
     exportBtn.className = 'toolbar-btn';
-    exportBtn.innerHTML = '📥 Export Schema';
+    exportBtn.innerHTML = i18n.t('export');
     exportBtn.addEventListener('click', () => this.exportSchema());
     toolbar.appendChild(exportBtn);
 
     // Import button
     const importBtn = document.createElement('button');
     importBtn.className = 'toolbar-btn';
-    importBtn.innerHTML = '📤 Import Schema';
+    importBtn.innerHTML = i18n.t('import');
     importBtn.addEventListener('click', () => this.importSchema());
     toolbar.appendChild(importBtn);
 
     // Page controls
     const pagePrev = document.createElement('button');
     pagePrev.className = 'toolbar-btn';
-    pagePrev.textContent = '◀';
+    pagePrev.textContent = i18n.t('prevPage');
     pagePrev.title = 'Previous page';
     pagePrev.addEventListener('click', () => {
       const pages = this.stateManager.getPages();
@@ -199,14 +204,17 @@ export class FormBuilder {
       const pages = this.stateManager.getPages();
       const current = this.stateManager.getUIState().currentPage;
       const idx = pages.indexOf(current);
-      pageLabel.textContent = pages.length === 0 ? 'Page 1' : `Page ${idx + 1} / ${pages.length}`;
+      const pageKey = 'page';
+      pageLabel.textContent = pages.length === 0 
+        ? `${i18n.t(pageKey)} 1` 
+        : `${i18n.t(pageKey)} ${idx + 1} / ${pages.length}`;
     };
     _updatePageLabel();
     toolbar.appendChild(pageLabel);
 
     const pageNext = document.createElement('button');
     pageNext.className = 'toolbar-btn';
-    pageNext.textContent = '▶';
+    pageNext.textContent = i18n.t('nextPage');
     pageNext.title = 'Next page';
     pageNext.addEventListener('click', () => {
       const pages = this.stateManager.getPages();
@@ -218,7 +226,7 @@ export class FormBuilder {
 
     const addPageBtn = document.createElement('button');
     addPageBtn.className = 'toolbar-btn';
-    addPageBtn.textContent = '+ Page';
+    addPageBtn.textContent = i18n.t('addPage');
     addPageBtn.addEventListener('click', () => {
       const id = this.stateManager.addPage();
       // Create a new section for this page
@@ -237,14 +245,39 @@ export class FormBuilder {
     });
     toolbar.appendChild(addPageBtn);
 
+    // Language selector
+    const langSelect = document.createElement('select');
+    langSelect.className = 'toolbar-select';
+    langSelect.value = i18n.getLanguage();
+    
+    const languages = { de: 'Deutsch', en: 'English', es: 'Español', fr: 'Français' };
+    Object.entries(languages).forEach(([code, name]) => {
+      const opt = document.createElement('option');
+      opt.value = code;
+      opt.textContent = name;
+      langSelect.appendChild(opt);
+    });
+    
+    langSelect.addEventListener('change', (e) => {
+      i18n.setLanguage(e.target.value);
+      this.stateManager.updateUIState({ currentLanguage: e.target.value });
+      // Re-render toolbar
+      this._renderToolbar();
+      // Update all component labels
+      this.canvas?.render();
+      this.propertyEditor?.render(this.stateManager.getUIState().selectedFieldId);
+      this.formRenderer?.render();
+    });
+    toolbar.appendChild(langSelect);
+
     // Clear button
     const clearBtn = document.createElement('button');
     clearBtn.className = 'toolbar-btn danger';
-    clearBtn.innerHTML = '🗑 Clear';
+    clearBtn.innerHTML = i18n.t('clear');
     clearBtn.addEventListener('click', () => {
-      if (confirm('Clear all fields? This cannot be undone.')) {
+      if (confirm(i18n.t('clearAllConfirm'))) {
         this.stateManager.setSchema({
-          meta: { name: 'New Form', version: '1.0.0', description: '' },
+          meta: { name: i18n.t('formName'), version: '1.0.0', description: '' },
           fields: [],
         });
       }

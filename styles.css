@@ -145,6 +145,22 @@ body {
   min-width: 200px;
 }
 
+.toolbar-select {
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  font-size: 13px;
+  cursor: pointer;
+  background: var(--bg-white);
+  color: var(--text-dark);
+  transition: all 0.2s;
+}
+
+.toolbar-select:hover {
+  border-color: var(--primary-color);
+  background: var(--bg-light);
+}
+
 .toolbar-btn {
   background: var(--bg-white);
   color: var(--text-dark);

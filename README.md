@@ -1,6 +1,6 @@
 # FormBuilder - Professionelles Visual Form Builder System
 
-Ein vollwertiger, Framework-unabhängiger Formbuilder in reinem JavaScript (ES6+) mit Drag-&-Drop-Editor, Schema-Engine, Rule Engine und Live-Preview.
+Ein vollwertiger, Framework-unabhängiger Formbuilder in reinem JavaScript (ES6+) mit Drag-&-Drop-Editor, Schema-Engine, Rule Engine, Live-Preview und **Internationalisierung** (Deutsch, Englisch, Spanisch, Französisch).
 
 ## 🎯 Überblick
 
@@ -12,6 +12,8 @@ Dieser Formbuilder ist ein **produktionsreifer, modularer System** bestehend aus
 - **Validation Engine** - Feldvalidierung
 - **State Manager** - Zentraler State
 - **Schema Engine** - JSON-Schema als Single Source of Truth
+- **i18n System** - Mehrsprachige Benutzeroberfläche (DE/EN/ES/FR)
+- **Section Editing** - Bearbeitbare Abschnitte mit Eigenschaften und Logik
 
 ## 📁 Projektstruktur
 
@@ -42,12 +44,15 @@ formbuilder-cms/
 │   │
 │   ├── utils/                  # Hilfsfunktionen
 │   │   ├── UUID.js            # ID-Generator
-│   │   └── Constants.js        # Konstanten & Enums
+│   │   ├── Constants.js        # Konstanten & Enums
+│   │   └── i18n.js            # Internationalisierung (Übersetzungen)
 │   │
 │   └── index.js               # Export aller Module
 │
 ├── index.html                  # Demo-Seite
 ├── styles.css                  # Vollständige CSS-Styles
+├── README.md                   # Dokumentation
+├── CHANGELOG_i18n.md          # i18n & Section Editing Dokumentation
 └── examples/
     └── sample-schema.json      # Beispiel-Schema
 ```
@@ -79,12 +84,14 @@ Oder öffne `index.html` direkt im Browser für eine lokale Demo.
   <script type="module">
     import { FormBuilder } from './src/builder/FormBuilder.js';
 
+    // Sprache kann auf 'de', 'en', 'es', 'fr' gesetzt werden
     const builder = new FormBuilder({
       builderContainerId: 'builder',
       previewContainerId: 'preview',
       paletteContainerId: 'palette',
       canvasContainerId: 'canvas',
       propertiesContainerId: 'properties',
+      language: 'de', // Deutsch, Englisch, Spanisch, Französisch
     });
 
     builder.init();

@@ -2,6 +2,7 @@
  * PropertyEditor - Edit field properties and rules
  */
 import Constants from '../utils/Constants.js';
+import { i18n } from '../utils/i18n.js';
 
 export class PropertyEditor {
   constructor(containerId, stateManager, eventBus) {
@@ -32,6 +33,12 @@ export class PropertyEditor {
     this.container.innerHTML = '';
     this.container.className = 'property-editor';
 
+    // Check if this is a section (type === 'section')
+    if (field.type === Constants.FIELD_TYPES.SECTION || field.type === 'section') {
+      this._renderSectionProperties(field);
+      return;
+    }
+
     // Field properties
     this._renderBasicProperties(field);
 
@@ -52,6 +59,84 @@ export class PropertyEditor {
   }
 
   /**
+   * Render section properties (for section type fields)
+   */
+  _renderSectionProperties(section) {
+    const sectionDiv = document.createElement('div');
+    sectionDiv.className = 'editor-section';
+
+    const title = document.createElement('h4');
+    title.textContent = i18n.t('sectionLabel');
+    sectionDiv.appendChild(title);
+
+    // Section label
+    sectionDiv.appendChild(
+      this._createInputField('label', i18n.t('label'), section.label || '', (value) => {
+        this.stateManager.updateField(section.id, { label: value });
+      })
+    );
+
+    // Section description
+    sectionDiv.appendChild(
+      this._createInputField('description', 'Description', section.description || '', (value) => {
+        this.stateManager.updateField(section.id, { description: value });
+      })
+    );
+
+    // Disabled checkbox for entire section
+    sectionDiv.appendChild(
+      this._createCheckboxField('disabled', i18n.t('disabled'), section.disabled, (value) => {
+        this.stateManager.updateField(section.id, { disabled: value });
+      })
+    );
+
+    this.container.appendChild(sectionDiv);
+
+    // Conditional Logic Rules for the entire section
+    this._renderSectionLogicRules(section);
+  }
+
+  /**
+   * Render logic rules for sections
+   */
+  _renderSectionLogicRules(section) {
+    const rulesSection = document.createElement('div');
+    rulesSection.className = 'editor-section';
+
+    const title = document.createElement('h4');
+    title.textContent = i18n.t('conditionalLogic');
+    rulesSection.appendChild(title);
+
+    const logicContainer = document.createElement('div');
+    logicContainer.className = 'logic-rules';
+
+    // Display existing logic
+    if (section.logic && section.logic.length > 0) {
+      section.logic.forEach((rule, index) => {
+        const ruleEl = this._createLogicRuleElement(section, rule, index);
+        logicContainer.appendChild(ruleEl);
+      });
+    }
+
+    // Add logic rule button
+    const addBtn = document.createElement('button');
+    addBtn.className = 'add-rule-btn';
+    addBtn.textContent = i18n.t('addLogic');
+    addBtn.addEventListener('click', () => {
+      const newLogic = {
+        if: { field: '', operator: 'equals', value: '' },
+        then: [{ action: 'show' }],
+      };
+      const logic = [...(section.logic || []), newLogic];
+      this.stateManager.updateField(section.id, { logic });
+    });
+
+    rulesSection.appendChild(logicContainer);
+    rulesSection.appendChild(addBtn);
+    this.container.appendChild(rulesSection);
+  }
+
+  /**
    * Render basic field properties
    */
   _renderBasicProperties(field) {
@@ -59,12 +144,12 @@ export class PropertyEditor {
     section.className = 'editor-section';
 
     const title = document.createElement('h4');
-    title.textContent = 'Basic Properties';
+    title.textContent = i18n.t('basicProperties');
     section.appendChild(title);
 
     // Label
     section.appendChild(
-      this._createInputField('label', 'Label', field.label, (value) => {
+      this._createInputField('label', i18n.t('label'), field.label, (value) => {
         this.stateManager.updateField(field.id, { label: value });
       })
     );
@@ -77,7 +162,7 @@ export class PropertyEditor {
       field.type === Constants.FIELD_TYPES.TEXTAREA
     ) {
       section.appendChild(
-        this._createInputField('placeholder', 'Placeholder', field.placeholder || '', (value) => {
+        this._createInputField('placeholder', i18n.t('placeholder'), field.placeholder || '', (value) => {
           this.stateManager.updateField(field.id, { placeholder: value });
         })
       );
@@ -85,21 +170,21 @@ export class PropertyEditor {
 
     // Help text
     section.appendChild(
-      this._createInputField('helpText', 'Help Text', field.helpText || '', (value) => {
+      this._createInputField('helpText', i18n.t('helpText'), field.helpText || '', (value) => {
         this.stateManager.updateField(field.id, { helpText: value });
       })
     );
 
     // Required checkbox
     section.appendChild(
-      this._createCheckboxField('required', 'Required', field.required, (value) => {
+      this._createCheckboxField('required', i18n.t('required'), field.required, (value) => {
         this.stateManager.updateField(field.id, { required: value });
       })
     );
 
     // Disabled checkbox
     section.appendChild(
-      this._createCheckboxField('disabled', 'Disabled', field.disabled, (value) => {
+      this._createCheckboxField('disabled', i18n.t('disabled'), field.disabled, (value) => {
         this.stateManager.updateField(field.id, { disabled: value });
       })
     );
@@ -109,7 +194,7 @@ export class PropertyEditor {
     modelGroup.className = 'form-group';
 
     const modelLabel = document.createElement('label');
-    modelLabel.textContent = 'Model/Field Name';
+    modelLabel.textContent = i18n.t('modelName');
     modelGroup.appendChild(modelLabel);
 
     const modelInput = document.createElement('input');
@@ -132,7 +217,7 @@ export class PropertyEditor {
     section.className = 'editor-section';
 
     const title = document.createElement('h4');
-    title.textContent = 'Validation Rules';
+    title.textContent = i18n.t('validationRules');
     section.appendChild(title);
 
     const rulesContainer = document.createElement('div');
@@ -149,7 +234,7 @@ export class PropertyEditor {
     // Add rule button
     const addBtn = document.createElement('button');
     addBtn.className = 'add-rule-btn';
-    addBtn.textContent = '+ Add Validation Rule';
+    addBtn.textContent = i18n.t('addValidation');
     addBtn.addEventListener('click', () => {
       const newRule = { rule: Constants.VALIDATION_RULES.REQUIRED, message: '' };
       const validation = [...(field.validation || []), newRule];
@@ -170,7 +255,7 @@ export class PropertyEditor {
     section.className = 'editor-section';
 
     const title = document.createElement('h4');
-    title.textContent = 'Conditional Logic';
+    title.textContent = i18n.t('conditionalLogic');
     section.appendChild(title);
 
     const logicContainer = document.createElement('div');
@@ -187,7 +272,7 @@ export class PropertyEditor {
     // Add logic rule button
     const addBtn = document.createElement('button');
     addBtn.className = 'add-rule-btn';
-    addBtn.textContent = '+ Add Logic Rule';
+    addBtn.textContent = i18n.t('addLogic');
     addBtn.addEventListener('click', () => {
       const newLogic = {
         if: { field: '', operator: 'equals', value: '' },
@@ -211,7 +296,7 @@ export class PropertyEditor {
     section.className = 'editor-section';
 
     const title = document.createElement('h4');
-    title.textContent = 'Options';
+    title.textContent = i18n.t('options');
     section.appendChild(title);
 
     const optionsContainer = document.createElement('div');

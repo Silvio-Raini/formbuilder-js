@@ -2,6 +2,8 @@
  * StateManager - Centralized state management
  * Manages Schema State, Form Data, and UI State
  */
+import { i18n } from '../utils/i18n.js';
+
 export class StateManager {
   constructor() {
     this.schema = {
@@ -20,6 +22,7 @@ export class StateManager {
       errors: {},
       touched: {},
       currentPage: 'page-1',
+      currentLanguage: i18n.getLanguage(),
     };
 
     // Page counter
