@@ -16,26 +16,26 @@
       <div class="left-panel">
         <!-- Palette -->
         <div class="palette-section">
-          <h3>Field Types</h3>
+          <h3 id="paletteTitle">Feldtypen</h3>
           <div id="palette"></div>
         </div>
 
         <!-- Canvas/Builder -->
         <div class="canvas-section">
-          <div class="section-header">Form Builder</div>
+          <div class="section-header" id="canvasTitle">Formulargestalter</div>
           <div id="canvas" class="canvas-editor"></div>
         </div>
       </div>
 
       <!-- Center Panel: Live Preview (Large) -->
       <div class="preview-section">
-        <div class="section-header">Live Preview</div>
+        <div class="section-header" id="previewTitle">Echtzeitvorschau</div>
         <div id="preview" class="preview-editor"></div>
       </div>
 
       <!-- Right Panel: Properties Editor -->
       <div class="properties-section">
-        <div class="section-header">Properties</div>
+        <div class="section-header" id="propertiesTitle">Eigenschaften</div>
         <div id="properties"></div>
       </div>
     </div>
@@ -56,20 +56,28 @@
 
       builder.init();
 
+      // Update HTML labels with translations
+      import { i18n } from './src/utils/i18n.js';
+      
+      document.getElementById('paletteTitle').textContent = i18n.t('fieldTypesHeader');
+      document.getElementById('canvasTitle').textContent = i18n.t('formBuilderHeader');
+      document.getElementById('previewTitle').textContent = i18n.t('livePreviewHeader');
+      document.getElementById('propertiesTitle').textContent = i18n.t('propertiesHeader');
+
       // Expose builder to console for debugging
       window.formBuilder = builder;
 
       console.log(
-        '%cFormBuilder Initialized',
+        '%c' + i18n.t('consoleInitialized'),
         'font-size: 16px; color: #2563eb; font-weight: bold;'
       );
-      console.log('Use window.formBuilder to interact with the builder');
-      console.log('getSchema() - Get current form schema');
-      console.log('setSchema(schema) - Set form schema');
-      console.log('getFormData() - Get form data');
-      console.log('validateForm() - Validate form');
-      console.log('Supported languages: de, en, es, fr');
-      console.log('Switch languages using the dropdown in the toolbar');
+      console.log(i18n.t('consoleUseBuilder'));
+      console.log(i18n.t('consoleGetSchema'));
+      console.log(i18n.t('consoleSetSchema'));
+      console.log(i18n.t('consoleGetFormData'));
+      console.log(i18n.t('consoleValidateForm'));
+      console.log(i18n.t('consoleSupportedLanguages'));
+      console.log(i18n.t('consoleSwitchLanguage'));
     </script>
   </body>
 </html>

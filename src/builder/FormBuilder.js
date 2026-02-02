@@ -22,7 +22,7 @@ export class FormBuilder {
       paletteContainerId: 'palette',
       canvasContainerId: 'canvas',
       propertiesContainerId: 'properties',
-      language: 'en',
+      language: 'de', // Default to German
       ...config,
     };
 
@@ -78,7 +78,10 @@ export class FormBuilder {
     this._setupStateListeners();
     this._renderToolbar();
 
-    console.log('FormBuilder initialized');
+    console.log(
+      '%c' + i18n.t('consoleInitialized'),
+      'font-size: 16px; color: #2563eb; font-weight: bold;'
+    );
   }
 
   /**

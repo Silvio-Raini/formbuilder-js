@@ -4,6 +4,7 @@
  */
 import FieldRenderer from './FieldRenderer.js';
 import Constants from '../utils/Constants.js';
+import { i18n } from '../utils/i18n.js';
 
 export class FormRenderer {
   constructor(containerId, schema, stateManager, ruleEngine, validationEngine, eventBus) {
@@ -56,7 +57,7 @@ export class FormRenderer {
         tab.className = 'form-page-tab';
         if (pageId === currentPage) tab.classList.add('active');
         const pageNum = parseInt(pageId.split('-')[1]) || 1;
-        tab.textContent = `Page ${pageNum}`;
+        tab.textContent = `${i18n.t('page')} ${pageNum}`;
         tab.type = 'button';
         tab.addEventListener('click', (e) => {
           e.preventDefault();
@@ -94,7 +95,7 @@ export class FormRenderer {
     const submitBtn = document.createElement('button');
     submitBtn.type = 'submit';
     submitBtn.className = 'form-submit-btn';
-    submitBtn.textContent = 'Submit';
+    submitBtn.textContent = i18n.t('submit');
     form.appendChild(submitBtn);
 
     // Setup form event listeners

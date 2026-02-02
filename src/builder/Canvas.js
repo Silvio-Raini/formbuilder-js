@@ -3,6 +3,7 @@
  */
 import Constants from '../utils/Constants.js';
 import { SchemaEngine } from '../schema/SchemaEngine.js';
+import { i18n } from '../utils/i18n.js';
 
 export class Canvas {
   constructor(containerId, stateManager, eventBus) {
@@ -41,14 +42,14 @@ export class Canvas {
 
       const secHeader = document.createElement('div');
       secHeader.className = 'canvas-section-header';
-      secHeader.textContent = section.label || 'Section';
+      secHeader.textContent = section.label || i18n.t('section');
 
       const secActions = document.createElement('div');
       secActions.className = 'canvas-section-actions';
       const editSecBtn = document.createElement('button');
       editSecBtn.className = 'canvas-action-btn';
-      editSecBtn.textContent = '✎';
-      editSecBtn.title = 'Edit section';
+      editSecBtn.textContent = i18n.t('edit');
+      editSecBtn.title = i18n.t('edit') + ' ' + i18n.t('section');
       editSecBtn.addEventListener('click', () => {
         this.eventBus.emit(Constants.EVENTS.FIELD_SELECTED, section.id);
       });
@@ -142,7 +143,8 @@ export class Canvas {
     if (field.logic && field.logic.length > 0) {
       const logicIndicator = document.createElement('span');
       logicIndicator.className = 'canvas-field-logic';
-      logicIndicator.textContent = `⚡ ${field.logic.length} rule(s)`;
+      const ruleWord = field.logic.length === 1 ? i18n.t('rule') : i18n.t('rules');
+      logicIndicator.textContent = `⚡ ${field.logic.length} ${ruleWord}`;
       preview.appendChild(logicIndicator);
     }
 
@@ -155,15 +157,16 @@ export class Canvas {
     const editBtn = document.createElement('button');
     editBtn.className = 'canvas-action-btn canvas-edit-btn';
     editBtn.innerHTML = '✎';
-    editBtn.title = 'Edit field';
+    editBtn.textContent = i18n.t('edit');
+    editBtn.title = i18n.t('edit') + ' ' + i18n.t('fieldTypes').slice(0, -1);
     editBtn.addEventListener('click', () => {
       this.eventBus.emit(Constants.EVENTS.FIELD_SELECTED, field.id);
     });
 
     const duplicateBtn = document.createElement('button');
     duplicateBtn.className = 'canvas-action-btn canvas-duplicate-btn';
-    duplicateBtn.innerHTML = '⎘';
-    duplicateBtn.title = 'Duplicate field';
+    duplicateBtn.innerHTML = i18n.t('duplicate');
+    duplicateBtn.title = i18n.t('duplicate') + ' ' + i18n.t('fieldTypes').slice(0, -1);
     duplicateBtn.addEventListener('click', () => {
       const cloned = SchemaEngine.cloneField(field);
       // find parent section and add clone into same section
@@ -175,10 +178,10 @@ export class Canvas {
 
     const deleteBtn = document.createElement('button');
     deleteBtn.className = 'canvas-action-btn canvas-delete-btn';
-    deleteBtn.innerHTML = '🗑';
-    deleteBtn.title = 'Delete field';
+    deleteBtn.innerHTML = i18n.t('delete');
+    deleteBtn.title = i18n.t('delete') + ' ' + i18n.t('fieldTypes').slice(0, -1);
     deleteBtn.addEventListener('click', () => {
-      if (confirm(`Delete field "${field.label || field.type}"?`)) {
+      if (confirm(`${i18n.t('deleteField')} "${field.label || field.type}"`)) {
         this.stateManager.removeField(field.id);
       }
     });
