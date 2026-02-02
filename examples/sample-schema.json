@@ -1,0 +1,230 @@
+{
+  "meta": {
+    "name": "Advanced Customer Form",
+    "version": "1.0.0",
+    "description": "A comprehensive form demonstrating all features"
+  },
+  "fields": [
+    {
+      "id": "field_section_personal",
+      "type": "section",
+      "label": "Personal Information",
+      "fields": [
+        {
+          "id": "field_firstname",
+          "type": "text",
+          "model": "firstName",
+          "label": "First Name",
+          "placeholder": "John",
+          "required": true,
+          "validation": [
+            {
+              "rule": "required",
+              "message": "First name is required"
+            },
+            {
+              "rule": "minLength",
+              "value": 2,
+              "message": "Minimum 2 characters"
+            }
+          ],
+          "helpText": "Enter your first name"
+        },
+        {
+          "id": "field_lastname",
+          "type": "text",
+          "model": "lastName",
+          "label": "Last Name",
+          "placeholder": "Doe",
+          "required": true,
+          "validation": [
+            {
+              "rule": "required",
+              "message": "Last name is required"
+            }
+          ]
+        },
+        {
+          "id": "field_email",
+          "type": "email",
+          "model": "email",
+          "label": "Email Address",
+          "placeholder": "john@example.com",
+          "required": true,
+          "validation": [
+            {
+              "rule": "required",
+              "message": "Email is required"
+            },
+            {
+              "rule": "email",
+              "message": "Please enter a valid email"
+            }
+          ]
+        },
+        {
+          "id": "field_phone",
+          "type": "text",
+          "model": "phone",
+          "label": "Phone Number",
+          "placeholder": "+49 123 456789",
+          "helpText": "Include country code"
+        }
+      ]
+    },
+    {
+      "id": "field_section_address",
+      "type": "section",
+      "label": "Address Information",
+      "fields": [
+        {
+          "id": "field_country",
+          "type": "select",
+          "model": "country",
+          "label": "Country",
+          "required": true,
+          "options": [
+            {
+              "value": "DE",
+              "label": "Germany"
+            },
+            {
+              "value": "AT",
+              "label": "Austria"
+            },
+            {
+              "value": "CH",
+              "label": "Switzerland"
+            },
+            {
+              "value": "FR",
+              "label": "France"
+            },
+            {
+              "value": "NL",
+              "label": "Netherlands"
+            }
+          ],
+          "validation": [
+            {
+              "rule": "required",
+              "message": "Country is required"
+            }
+          ]
+        },
+        {
+          "id": "field_city",
+          "type": "text",
+          "model": "city",
+          "label": "City",
+          "required": true,
+          "visibility": {
+            "dependsOn": "country",
+            "operator": "notEquals",
+            "value": ""
+          }
+        },
+        {
+          "id": "field_zipcode",
+          "type": "text",
+          "model": "zipCode",
+          "label": "ZIP Code",
+          "required": true,
+          "validation": [
+            {
+              "rule": "pattern",
+              "value": "^[0-9]{5,6}$",
+              "message": "Invalid ZIP code format"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "field_age",
+      "type": "number",
+      "model": "age",
+      "label": "Age",
+      "required": true,
+      "validation": [
+        {
+          "rule": "required",
+          "message": "Age is required"
+        },
+        {
+          "rule": "min",
+          "value": 18,
+          "message": "Must be 18 or older"
+        },
+        {
+          "rule": "max",
+          "value": 120,
+          "message": "Invalid age"
+        }
+      ],
+      "logic": [
+        {
+          "if": {
+            "field": "age",
+            "operator": "<",
+            "value": "18"
+          },
+          "then": [
+            {
+              "action": "disable"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "field_interests",
+      "type": "multiselect",
+      "model": "interests",
+      "label": "Interests",
+      "helpText": "Select all that apply",
+      "options": [
+        {
+          "value": "tech",
+          "label": "Technology"
+        },
+        {
+          "value": "sports",
+          "label": "Sports"
+        },
+        {
+          "value": "travel",
+          "label": "Travel"
+        },
+        {
+          "value": "music",
+          "label": "Music"
+        },
+        {
+          "value": "reading",
+          "label": "Reading"
+        }
+      ]
+    },
+    {
+      "id": "field_terms",
+      "type": "checkbox",
+      "model": "acceptTerms",
+      "label": "I accept the terms and conditions",
+      "required": true,
+      "validation": [
+        {
+          "rule": "required",
+          "message": "You must accept the terms"
+        }
+      ]
+    },
+    {
+      "id": "field_newsletter",
+      "type": "switch",
+      "model": "newsletter",
+      "label": "Subscribe to newsletter",
+      "default": false
+    }
+  ]
+}

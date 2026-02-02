@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FormBuilder - Visual Form Builder</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Main Application Container -->
+    <div class="app-container">
+      <!-- Left Panel: Field Palette -->
+      <div class="palette-section">
+        <div id="palette"></div>
+      </div>
+
+      <!-- Center Panel: Canvas & Live Preview -->
+      <div class="canvas-section">
+          <div class="section-header">Formbuilder | Drag & Drop to build</div>
+          <div id="canvas" class="canvas-editor"></div>
+          <div class="section-header" style="margin-top:16px;">Live Preview</div>
+          <div id="preview" class="preview-editor" style="display:none"></div>
+      </div>
+
+      <!-- Right Panel: Properties Editor -->
+      <div class="properties-section">
+        <div id="properties"></div>
+      </div>
+    </div>
+
+    <!-- Script: Initialize Application -->
+    <script type="module">
+      import { FormBuilder } from './src/builder/FormBuilder.js';
+
+      // Initialize the form builder
+      const builder = new FormBuilder({
+        canvasContainerId: 'canvas',
+        previewContainerId: 'preview',
+        paletteContainerId: 'palette',
+        propertiesContainerId: 'properties',
+      });
+
+      builder.init();
+
+      // Expose builder to console for debugging
+      window.formBuilder = builder;
+
+      console.log(
+        '%cFormBuilder Initialized',
+        'font-size: 16px; color: #2563eb; font-weight: bold;'
+      );
+      console.log('Use window.formBuilder to interact with the builder');
+      console.log('getSchema() - Get current form schema');
+      console.log('setSchema(schema) - Set form schema');
+      console.log('getFormData() - Get form data');
+      console.log('validateForm() - Validate form');
+    </script>
+  </body>
+</html>
