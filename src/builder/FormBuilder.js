@@ -131,8 +131,17 @@ export class FormBuilder {
    * Render toolbar with actions
    */
   _renderToolbar() {
-    const builderContainer = document.getElementById(this.config.builderContainerId);
-    if (!builderContainer) return;
+    let builderContainer = document.getElementById(this.config.builderContainerId);
+    if (!builderContainer) {
+      const canvasSection = document.querySelector('.canvas-section');
+      if (canvasSection && canvasSection.parentNode) {
+        builderContainer = document.createElement('div');
+        builderContainer.id = this.config.builderContainerId;
+        canvasSection.parentNode.insertBefore(builderContainer, canvasSection);
+      } else {
+        return;
+      }
+    }
 
     const toolbar = document.createElement('div');
     toolbar.className = 'builder-toolbar';

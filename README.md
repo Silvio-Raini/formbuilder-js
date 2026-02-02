@@ -54,16 +54,11 @@ formbuilder-cms/
 
 ## 🚀 Quick Start
 
-### 1. Lokale Demo starten
+### 1. Dateien auf Webserver hochladen
 
-```bash
-# Mit einem einfachen HTTP-Server
-cd formbuilder-cms
-python -m http.server 8000
-# oder: python3 -m http.server 8000
+Einfach alle Dateien auf deinen Webserver (Apache, Nginx, etc.) hochladen und `index.html` öffnen.
 
-# Dann öffnen: http://localhost:8000
-```
+Oder öffne `index.html` direkt im Browser für eine lokale Demo.
 
 ### 2. Im Code verwenden
 

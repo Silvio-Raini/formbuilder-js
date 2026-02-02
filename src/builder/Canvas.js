@@ -68,31 +68,24 @@ export class Canvas {
       }
 
       // allow dropping into this section
-      secEl.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        secEl.classList.add('drag-over');
-      });
-      secEl.addEventListener('dragleave', () => secEl.classList.remove('drag-over'));
-      secEl.addEventListener('drop', (e) => {
-        e.preventDefault();
-        secEl.classList.remove('drag-over');
-        const fieldType = e.dataTransfer.getData('fieldType');
-        const fieldId = e.dataTransfer.getData('fieldId');
-        if (fieldType) {
-          const newField = SchemaEngine.createField(fieldType);
-          this.stateManager.addField(newField, section.id);
-        } else if (fieldId) {
-          // moving existing field into this section
-          const srcSection = this.stateManager.getParentSectionId(fieldId);
-          if (srcSection && srcSection !== section.id) {
-            // remove from source and add to target
-            this.stateManager.removeField(fieldId);
-            const movedField = SchemaEngine.cloneField(this.stateManager.getField(fieldId) || {});
-            // cloned will have new id; instead attempt to move original data
-            // better: get original field before removal
+      if (!section._dropSetup) {
+        secEl.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          secEl.classList.add('drag-over');
+        });
+        secEl.addEventListener('dragleave', () => secEl.classList.remove('drag-over'));
+        secEl.addEventListener('drop', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          secEl.classList.remove('drag-over');
+          const fieldType = e.dataTransfer.getData('fieldType');
+          if (fieldType) {
+            const newField = SchemaEngine.createField(fieldType);
+            this.stateManager.addField(newField, section.id);
           }
-        }
-      });
+        });
+        section._dropSetup = true;
+      }
 
       secEl.appendChild(fieldsWrap);
       this.container.appendChild(secEl);
