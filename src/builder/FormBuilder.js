@@ -133,16 +133,10 @@ export class FormBuilder {
   _renderToolbar() {
     let builderContainer = document.getElementById(this.config.builderContainerId);
     if (!builderContainer) {
-      const canvasSection = document.querySelector('.canvas-section');
-      if (canvasSection && canvasSection.parentNode) {
-        builderContainer = document.createElement('div');
-        builderContainer.id = this.config.builderContainerId;
-        canvasSection.parentNode.insertBefore(builderContainer, canvasSection);
-      } else {
-        return;
-      }
+      return;
     }
 
+    builderContainer.innerHTML = '';
     const toolbar = document.createElement('div');
     toolbar.className = 'builder-toolbar';
 
@@ -227,7 +221,16 @@ export class FormBuilder {
     addPageBtn.textContent = '+ Page';
     addPageBtn.addEventListener('click', () => {
       const id = this.stateManager.addPage();
-      this.stateManager.setCurrentPage(id);
+      // Create a new section for this page
+      const newSection = {
+        id: `section_${Date.now()}`,
+        type: 'section',
+        label: `Page ${this._getPageNumber(id)}`,
+        fields: [],
+        page: id,
+      };
+      this.stateManager.schema.fields.push(newSection);
+      this.stateManager.notifySubscribers('schema');
       _updatePageLabel();
       this.canvas.update();
       this.formRenderer.updateSchema(this.stateManager.getSchema());
@@ -272,6 +275,14 @@ export class FormBuilder {
     if (next) {
       this.stateManager.setSchema(next);
     }
+  }
+
+  /**
+   * Get page number from page id
+   */
+  _getPageNumber(pageId) {
+    const num = parseInt(pageId.split('-')[1]);
+    return isNaN(num) ? 1 : num;
   }
 
   /**

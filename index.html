@@ -7,23 +7,35 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <!-- Toolbar (Top) -->
+    <div id="builder" class="builder-toolbar-container"></div>
+
     <!-- Main Application Container -->
     <div class="app-container">
-      <!-- Left Panel: Field Palette -->
-      <div class="palette-section">
-        <div id="palette"></div>
+      <!-- Left Panel: Field Palette & Canvas -->
+      <div class="left-panel">
+        <!-- Palette -->
+        <div class="palette-section">
+          <h3>Field Types</h3>
+          <div id="palette"></div>
+        </div>
+
+        <!-- Canvas/Builder -->
+        <div class="canvas-section">
+          <div class="section-header">Form Builder</div>
+          <div id="canvas" class="canvas-editor"></div>
+        </div>
       </div>
 
-      <!-- Center Panel: Canvas & Live Preview -->
-      <div class="canvas-section">
-          <div class="section-header">Formbuilder | Drag & Drop to build</div>
-          <div id="canvas" class="canvas-editor"></div>
-          <div class="section-header" style="margin-top:16px;">Live Preview</div>
-          <div id="preview" class="preview-editor" style="display:none"></div>
+      <!-- Center Panel: Live Preview (Large) -->
+      <div class="preview-section">
+        <div class="section-header">Live Preview</div>
+        <div id="preview" class="preview-editor"></div>
       </div>
 
       <!-- Right Panel: Properties Editor -->
       <div class="properties-section">
+        <div class="section-header">Properties</div>
         <div id="properties"></div>
       </div>
     </div>

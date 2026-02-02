@@ -38,43 +38,86 @@ body {
    LAYOUT
    ============================================ */
 
-.app-container {
-  display: grid;
-  grid-template-columns: 250px 1fr 350px;
+body {
+  display: flex;
+  flex-direction: column;
   height: 100vh;
-  gap: 1px;
-  background: var(--border-color);
+  overflow: hidden;
 }
 
-.palette-section,
-.canvas-section,
-.preview-section,
-.properties-section {
+.builder-toolbar-container {
+  flex-shrink: 0;
   background: var(--bg-white);
-  overflow: auto;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.app-container {
+  display: grid;
+  grid-template-columns: 280px 1fr 350px;
+  flex: 1;
+  gap: 1px;
+  background: var(--border-color);
+  overflow: hidden;
+}
+
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-white);
+  border-right: 1px solid var(--border-color);
+  overflow: hidden;
 }
 
 .palette-section {
-  padding: 20px;
-  border-right: 1px solid var(--border-color);
+  padding: 12px;
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+  max-height: 35%;
+  overflow-y: auto;
+}
+
+.palette-section h3 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .canvas-section {
-  padding: 20px;
-  border-right: 1px solid var(--border-color);
+  flex: 1;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  padding: 0;
 }
 
-.properties-section {
-  padding: 20px;
-  border-left: 1px solid var(--border-color);
-  font-size: 13px;
+.canvas-editor {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  background: var(--bg-light);
 }
 
 .preview-section {
+  background: var(--bg-white);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.preview-editor {
+  flex: 1;
+  overflow-y: auto;
   padding: 20px;
-  overflow: auto;
+  background: var(--bg-white);
+}
+
+.properties-section {
+  padding: 12px;
+  border-left: 1px solid var(--border-color);
+  font-size: 13px;
+  overflow-y: auto;
+  background: var(--bg-white);
 }
 
 .builder-toolbar {
@@ -524,8 +567,38 @@ body {
 .form-title {
   font-size: 24px;
   font-weight: 600;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
   color: var(--text-dark);
+}
+
+.form-page-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  border-bottom: 2px solid var(--border-color);
+  flex-wrap: wrap;
+}
+
+.form-page-tab {
+  padding: 10px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--text-light);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.form-page-tab:hover {
+  color: var(--text-dark);
+  background: var(--bg-light);
+}
+
+.form-page-tab.active {
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
 }
 
 .form-description {

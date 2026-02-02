@@ -84,17 +84,20 @@ export class StateManager {
       }
     }
 
-    // if no section exists, create a default one
+    // if no section exists, create a default one on current page
     if (!lastSection) {
       const defaultSection = {
         id: `section_${Date.now()}`,
         type: 'section',
         label: 'Section 1',
         fields: [],
-        page: this.uiState.currentPage,
+        page: this.uiState.currentPage || 'page-1',
       };
       this.schema.fields.push(defaultSection);
       lastSection = defaultSection;
+    } else if (!lastSection.page) {
+      // Ensure section has a page assignment
+      lastSection.page = this.uiState.currentPage || 'page-1';
     }
 
     if (!Array.isArray(lastSection.fields)) lastSection.fields = [];
@@ -133,9 +136,18 @@ export class StateManager {
   getPages() {
     const pages = new Set();
     for (const f of this.schema.fields) {
-      if (f.type === 'section' && f.page) pages.add(f.page);
+      if (f.type === 'section') {
+        // If section has a page, add it; otherwise use default page-1
+        pages.add(f.page || 'page-1');
+      }
     }
-    return Array.from(pages);
+    // Ensure at least page-1 exists
+    if (pages.size === 0) pages.add('page-1');
+    return Array.from(pages).sort((a, b) => {
+      const aNum = parseInt(a.split('-')[1]) || 0;
+      const bNum = parseInt(b.split('-')[1]) || 0;
+      return aNum - bNum;
+    });
   }
 
   /**

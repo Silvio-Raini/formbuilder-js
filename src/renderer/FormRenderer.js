@@ -44,6 +44,30 @@ export class FormRenderer {
       form.appendChild(title);
     }
 
+    // Render page tabs
+    const pages = this.stateManager.getPages();
+    if (pages && pages.length > 0) {
+      const tabsContainer = document.createElement('div');
+      tabsContainer.className = 'form-page-tabs';
+      const currentPage = this.stateManager.getUIState().currentPage;
+
+      pages.forEach((pageId) => {
+        const tab = document.createElement('button');
+        tab.className = 'form-page-tab';
+        if (pageId === currentPage) tab.classList.add('active');
+        const pageNum = parseInt(pageId.split('-')[1]) || 1;
+        tab.textContent = `Page ${pageNum}`;
+        tab.type = 'button';
+        tab.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.stateManager.setCurrentPage(pageId);
+        });
+        tabsContainer.appendChild(tab);
+      });
+
+      form.appendChild(tabsContainer);
+    }
+
     // Render form description if present
     if (this.schema.meta?.description) {
       const description = document.createElement('p');
